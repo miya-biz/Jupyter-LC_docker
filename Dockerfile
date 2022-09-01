@@ -60,10 +60,12 @@ RUN pip --no-cache-dir install folium
 #### Jupyter-LC_wrapper (NII) - https://github.com/NII-cloud-operation/Jupyter-LC_wrapper
 #### Jupyter-multi_outputs (NII) - https://github.com/NII-cloud-operation/Jupyter-multi_outputs
 #### Jupyter-LC_index (NII) - https://github.com/NII-cloud-operation/Jupyter-LC_index
+ENV nblineage_release_tag=0.2.0.test5 \
+    nblineage_release_url=https://github.com/yacchin1205/Jupyter-LC_nblineage/releases/download/
 RUN pip --no-cache-dir install jupyter_nbextensions_configurator && \
     pip --no-cache-dir install six bash_kernel \
     https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tarball/master \
-    https://github.com/NII-cloud-operation/Jupyter-LC_nblineage/tarball/master \
+    ${nblineage_release_url}${nblineage_release_tag}/nblineage-${nblineage_release_tag}.tar.gz \
     https://github.com/NII-cloud-operation/Jupyter-LC_run_through/tarball/master \
     https://github.com/NII-cloud-operation/Jupyter-LC_wrapper/tarball/master \
     git+https://github.com/NII-cloud-operation/Jupyter-multi_outputs \
@@ -72,8 +74,9 @@ RUN pip --no-cache-dir install jupyter_nbextensions_configurator && \
     git+https://github.com/NII-cloud-operation/sidestickies.git \
     git+https://github.com/NII-cloud-operation/nbsearch.git
 
-
 RUN jupyter contrib nbextension install --sys-prefix && \
+    jupyter labextension install ${nblineage_release_url}${nblineage_release_tag}/nblineage-${nblineage_release_tag}.tgz && \
+    jupyter labextension enable nblineage && \
     jupyter nblineage quick-setup --sys-prefix && \
     jupyter nbextension install --py lc_run_through --sys-prefix && \
     jupyter nbextension enable --py lc_run_through --sys-prefix && \
@@ -98,6 +101,8 @@ RUN jupyter contrib nbextension install --sys-prefix && \
     jupyter kernelspec install /tmp/kernels/bash-wrapper --sys-prefix && \
     jupyter wrapper-kernelspec install /tmp/wrapper-kernels/python3 --sys-prefix && \
     jupyter wrapper-kernelspec install /tmp/wrapper-kernels/bash --sys-prefix && \
+    jlpm cache clean && \
+    npm cache clean --force && \
     fix-permissions /home/$NB_USER
 
 ### nbconfig
