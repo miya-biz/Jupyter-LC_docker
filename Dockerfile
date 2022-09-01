@@ -63,14 +63,16 @@ RUN pip --no-cache-dir install folium
 ENV nblineage_release_tag=0.2.0.test5 \
     nblineage_release_url=https://github.com/yacchin1205/Jupyter-LC_nblineage/releases/download/ \
     lc_index_release_tag=0.1.0.test3 \
-    lc_index_release_url=https://github.com/yacchin1205/Jupyter-LC_index/releases/download/
+    lc_index_release_url=https://github.com/yacchin1205/Jupyter-LC_index/releases/download/ \
+    lc_multi_outputs_release_tag=2.1.0.test5 \
+    lc_multi_outputs_release_url=https://github.com/yacchin1205/Jupyter-multi_outputs/releases/download/
 RUN pip --no-cache-dir install jupyter_nbextensions_configurator && \
     pip --no-cache-dir install six bash_kernel \
     https://github.com/juhasch/jupyter_contrib_nbextensions/tarball/fix/remove_dependency \
     ${nblineage_release_url}${nblineage_release_tag}/nblineage-${nblineage_release_tag}.tar.gz \
     https://github.com/NII-cloud-operation/Jupyter-LC_run_through/tarball/master \
     https://github.com/NII-cloud-operation/Jupyter-LC_wrapper/tarball/master \
-    git+https://github.com/NII-cloud-operation/Jupyter-multi_outputs \
+    ${lc_multi_outputs_release_url}${lc_multi_outputs_release_tag}/lc_multi_outputs-${lc_multi_outputs_release_tag}.tar.gz \
     ${lc_index_release_url}${lc_index_release_tag}/lc_index-${lc_index_release_tag}.tar.gz \
     git+https://github.com/NII-cloud-operation/Jupyter-LC_notebook_diff.git \
     git+https://github.com/NII-cloud-operation/sidestickies.git \
@@ -82,6 +84,8 @@ RUN jupyter contrib nbextension install --sys-prefix && \
     jupyter nblineage quick-setup --sys-prefix && \
     jupyter nbextension install --py lc_run_through --sys-prefix && \
     jupyter nbextension enable --py lc_run_through --sys-prefix && \
+    jupyter labextension install ${lc_multi_outputs_release_url}${lc_multi_outputs_release_tag}/lc_multi_outputs-${lc_multi_outputs_release_tag}.tgz && \
+    jupyter labextension enable lc_multi_outputs && \
     jupyter nbextension install --py lc_multi_outputs --sys-prefix && \
     jupyter nbextension enable --py lc_multi_outputs --sys-prefix && \
     jupyter labextension install ${lc_index_release_url}${lc_index_release_tag}/lc_index-${lc_index_release_tag}.tgz && \
