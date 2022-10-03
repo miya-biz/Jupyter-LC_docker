@@ -36,8 +36,9 @@ SHELL ["/bin/bash", "-c"]
 RUN apt-get update && \
     apt-get -y install sshpass openssl ipmitool libssl-dev libffi-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
-    conda install --quiet --yes requests paramiko ansible && \
+    conda install --quiet --yes requests paramiko && \
     conda clean --all -f -y
+#    conda install --quiet --yes requests paramiko ansible &&
 
 ### Utilities
 RUN apt-get update && apt-get install -y virtinst dnsutils zip tree jq rsync iputils-ping && \
@@ -62,15 +63,17 @@ RUN pip --no-cache-dir install folium
 #### Jupyter-LC_index (NII) - https://github.com/NII-cloud-operation/Jupyter-LC_index
 ENV nblineage_release_tag=0.2.0.test5 \
     nblineage_release_url=https://github.com/yacchin1205/Jupyter-LC_nblineage/releases/download/ \
-    lc_index_release_tag=0.1.0.test3 \
+    lc_index_release_tag=0.1.0.test4 \
     lc_index_release_url=https://github.com/yacchin1205/Jupyter-LC_index/releases/download/ \
-    lc_multi_outputs_release_tag=2.1.0.test5 \
-    lc_multi_outputs_release_url=https://github.com/yacchin1205/Jupyter-multi_outputs/releases/download/
+    lc_multi_outputs_release_tag=2.1.0.test6 \
+    lc_multi_outputs_release_url=https://github.com/yacchin1205/Jupyter-multi_outputs/releases/download/ \
+    lc_run_through_release_tag=0.1.0.test1 \
+    lc_run_through_release_url=https://github.com/yacchin1205/Jupyter-LC_run_through/releases/download/
 RUN pip --no-cache-dir install jupyter_nbextensions_configurator && \
     pip --no-cache-dir install six bash_kernel \
     https://github.com/juhasch/jupyter_contrib_nbextensions/tarball/fix/remove_dependency \
     ${nblineage_release_url}${nblineage_release_tag}/nblineage-${nblineage_release_tag}.tar.gz \
-    https://github.com/NII-cloud-operation/Jupyter-LC_run_through/tarball/master \
+    ${lc_run_through_release_url}${lc_run_through_release_tag}/lc_run_through-${lc_run_through_release_tag}.tar.gz \
     https://github.com/NII-cloud-operation/Jupyter-LC_wrapper/tarball/master \
     ${lc_multi_outputs_release_url}${lc_multi_outputs_release_tag}/lc_multi_outputs-${lc_multi_outputs_release_tag}.tar.gz \
     ${lc_index_release_url}${lc_index_release_tag}/lc_index-${lc_index_release_tag}.tar.gz \
@@ -82,6 +85,7 @@ RUN jupyter contrib nbextension install --sys-prefix && \
     jupyter labextension install ${nblineage_release_url}${nblineage_release_tag}/nblineage-${nblineage_release_tag}.tgz && \
     jupyter labextension enable nblineage && \
     jupyter nblineage quick-setup --sys-prefix && \
+    jupyter labextension install ${lc_run_through_release_url}${lc_run_through_release_tag}/lc_run_through-${lc_run_through_release_tag}.tgz && \
     jupyter nbextension install --py lc_run_through --sys-prefix && \
     jupyter nbextension enable --py lc_run_through --sys-prefix && \
     jupyter labextension install ${lc_multi_outputs_release_url}${lc_multi_outputs_release_tag}/lc_multi_outputs-${lc_multi_outputs_release_tag}.tgz && \
