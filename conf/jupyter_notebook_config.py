@@ -1,7 +1,7 @@
 import os
 c.NotebookApp.ip = '*'
 c.NotebookApp.allow_remote_access = True
-c.MultiKernelManager.kernel_manager_class = 'lc_wrapper.LCWrapperKernelManager'
+c.MultiKernelManager.kernel_manager_class = 'lc_wrapper.AsyncLCWrapperKernelManager'
 c.KernelManager.shutdown_wait_time = 10.0
 c.FileContentsManager.delete_to_trash = False
 c.NotebookApp.quit_button = False
@@ -19,6 +19,18 @@ if 'SIDESTICKIES_SCRAPBOX_COOKIE_CONNECT_SID' in os.environ:
 
 if 'SIDESTICKIES_SCRAPBOX_PROJECT_ID' in os.environ:
     c.ScrapboxAPI.project_id = os.environ['SIDESTICKIES_SCRAPBOX_PROJECT_ID']
+
+if 'SIDESTICKIES_EP_WEAVE_URL' in os.environ:
+    # Enables EpWeaveAPI
+    c.SidestickiesAPI.api_class = "nbtags.api.EpWeaveAPI"
+    c.EpWeaveAPI.url = os.environ['SIDESTICKIES_EP_WEAVE_URL']
+
+if 'SIDESTICKIES_EP_WEAVE_API_KEY' in os.environ:
+    c.EpWeaveAPI.apikey = os.environ['SIDESTICKIES_EP_WEAVE_API_KEY']
+    del os.environ['SIDESTICKIES_EP_WEAVE_API_KEY']
+
+if 'SIDESTICKIES_EP_WEAVE_API_URL' in os.environ:
+    c.EpWeaveAPI.api_url = os.environ['SIDESTICKIES_EP_WEAVE_API_URL']
 
 if 'NBSEARCHDB_SOLR_BASE_URL' in os.environ:
     c.NBSearchDB.solr_base_url = os.environ['NBSEARCHDB_SOLR_BASE_URL']
@@ -65,3 +77,14 @@ c.LocalSource.base_dir = os.environ['NBSEARCHDB_BASE_DIR'] \
 c.LocalSource.server = os.environ['NBSEARCHDB_MY_SERVER_URL'] \
                        if 'NBSEARCHDB_MY_SERVER_URL' in os.environ else \
                        'http://localhost:8888/'
+
+if 'NBWHISPER_SKYWAY_API_TOKEN' in os.environ:
+    c.NBWhisper.skyway_api_token = os.environ['NBWHISPER_SKYWAY_API_TOKEN']
+    # Secrets removed from environment variables
+    del os.environ['NBWHISPER_SKYWAY_API_TOKEN']
+
+if 'NBWHISPER_ROOM_MODE_FOR_WAITING_ROOM' in os.environ:
+    c.NBWhisper.room_mode_for_waiting_room = os.environ['NBWHISPER_ROOM_MODE_FOR_WAITING_ROOM']
+
+if 'NBWHISPER_ROOM_MODE_FOR_TALKING_ROOM' in os.environ:
+    c.NBWhisper.room_mode_for_talking_room = os.environ['NBWHISPER_ROOM_MODE_FOR_TALKING_ROOM']
