@@ -71,54 +71,55 @@ ENV nblineage_release_tag=0.2.0.test4-12 \
     # lc_run_through_release_url=https://github.com/yacchin1205/Jupyter-LC_run_through/releases/download/
 RUN pip --no-cache-dir install jupyter_nbextensions_configurator && \
     pip --no-cache-dir install six bash_kernel \
-    https://github.com/NII-cloud-operation/jupyter_contrib_nbextensions/tarball/master \
+    #https://github.com/NII-cloud-operation/jupyter_contrib_nbextensions/tarball/master \
     ${nblineage_release_url}${nblineage_release_tag}/nblineage-${nblineage_release_tag}.tar.gz \
     # ${lc_run_through_release_url}${lc_run_through_release_tag}/lc_run_through-${lc_run_through_release_tag}.tar.gz \
     https://github.com/NII-cloud-operation/Jupyter-LC_wrapper/tarball/master \
-    ${lc_multi_outputs_release_url}${lc_multi_outputs_release_tag}/lc_multi_outputs-${lc_multi_outputs_release_tag}.tar.gz \
+    ${lc_multi_outputs_release_url}${lc_multi_outputs_release_tag}/lc_multi_outputs-${lc_multi_outputs_release_tag}.tar.gz
     # ${lc_index_release_url}${lc_index_release_tag}/lc_index-${lc_index_release_tag}.tar.gz \
-    git+https://github.com/NII-cloud-operation/Jupyter-LC_notebook_diff.git \
-    git+https://github.com/NII-cloud-operation/sidestickies.git \
-    git+https://github.com/NII-cloud-operation/nbsearch.git \
-    git+https://github.com/NII-cloud-operation/nbwhisper.git
+    #git+https://github.com/NII-cloud-operation/Jupyter-LC_notebook_diff.git \
+    #git+https://github.com/NII-cloud-operation/sidestickies.git \
+    #git+https://github.com/NII-cloud-operation/nbsearch.git \
+    #git+https://github.com/NII-cloud-operation/nbwhisper.git
 
-RUN jupyter contrib nbextension install --sys-prefix && \
-    jupyter labextension install ${nblineage_release_url}${nblineage_release_tag}/nblineage-${nblineage_release_tag}.tgz && \
+RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag}/nblineage-${nblineage_release_tag}.tgz && \
     jupyter labextension enable nblineage && \
-    jupyter nblineage quick-setup --sys-prefix && \
+    #jupyter contrib nbextension install --sys-prefix && \
+    jupyter server extension enable --py nblineage --sys-prefix && \
+    #jupyter nblineage quick-setup --sys-prefix && \
     # jupyter labextension install ${lc_run_through_release_url}${lc_run_through_release_tag}/lc_run_through-${lc_run_through_release_tag}.tgz && \
     # jupyter nbextension install --py lc_run_through --sys-prefix && \
     # jupyter nbextension enable --py lc_run_through --sys-prefix && \
     jupyter labextension install ${lc_multi_outputs_release_url}${lc_multi_outputs_release_tag}/lc_multi_outputs-${lc_multi_outputs_release_tag}.tgz && \
     jupyter labextension enable lc_multi_outputs && \
-    jupyter nbextension install --py lc_multi_outputs --sys-prefix && \
-    jupyter nbextension enable --py lc_multi_outputs --sys-prefix && \
+    # jupyter nbextension install --py lc_multi_outputs --sys-prefix && \
+    # jupyter nbextension enable --py lc_multi_outputs --sys-prefix && \
     # jupyter labextension install ${lc_index_release_url}${lc_index_release_tag}/lc_index-${lc_index_release_tag}.tgz && \
     # jupyter labextension enable lc_index && \
     # jupyter nbextension install --py lc_index --sys-prefix && \
     # jupyter nbextension enable --py lc_index --sys-prefix && \
     jupyter nbclassic-extension install --py lc_wrapper --sys-prefix && \
     jupyter nbclassic-extension enable --py lc_wrapper --sys-prefix && \
-    jupyter nbclassic-extension install --py lc_notebook_diff --sys-prefix && \
-    jupyter nbclassic-extension install --py nbtags --sys-prefix && \
-    jupyter nbclassic-serverextension enable --py nbtags --sys-prefix && \
-    jupyter nbclassic-extension install --py nbsearch --sys-prefix && \
-    jupyter nbclassic-serverextension enable --py nbsearch --sys-prefix && \
-    jupyter nbclassic-extension install --py nbwhisper --sys-prefix && \
-    jupyter nbclassic-serverextension enable --py nbwhisper --sys-prefix && \
-    jupyter nbclassic-extension install --py jupyter_nbextensions_configurator --sys-prefix && \
-    jupyter nbclassic-extension enable --py jupyter_nbextensions_configurator --sys-prefix && \
-    jupyter nbclassic-serverextension enable --py jupyter_nbextensions_configurator --sys-prefix && \
-    jupyter nbclassic-extension enable contrib_nbextensions_help_item/main --sys-prefix && \
-    jupyter nbclassic-extension enable collapsible_headings/main --sys-prefix && \
-    jupyter nbclassic-extension enable toc2/main --sys-prefix && \
+    # jupyter nbclassic-extension install --py lc_notebook_diff --sys-prefix && \
+    # jupyter nbclassic-extension install --py nbtags --sys-prefix && \
+    # jupyter nbclassic-serverextension enable --py nbtags --sys-prefix && \
+    # jupyter nbclassic-extension install --py nbsearch --sys-prefix && \
+    # jupyter nbclassic-serverextension enable --py nbsearch --sys-prefix && \
+    # jupyter nbclassic-extension install --py nbwhisper --sys-prefix && \
+    # jupyter nbclassic-serverextension enable --py nbwhisper --sys-prefix && \
+    # jupyter nbclassic-extension install --py jupyter_nbextensions_configurator --sys-prefix && \
+    # jupyter nbclassic-extension enable --py jupyter_nbextensions_configurator --sys-prefix && \
+    # jupyter nbclassic-serverextension enable --py jupyter_nbextensions_configurator --sys-prefix && \
+    # jupyter nbclassic-extension enable contrib_nbextensions_help_item/main --sys-prefix && \
+    # jupyter nbclassic-extension enable collapsible_headings/main --sys-prefix && \
+    # jupyter nbclassic-extension enable toc2/main --sys-prefix && \
     python -m bash_kernel.install --sys-prefix && \
     jupyter kernelspec install /tmp/kernels/python3-wrapper --sys-prefix && \
     jupyter kernelspec install /tmp/kernels/bash-wrapper --sys-prefix && \
     jupyter wrapper-kernelspec install /tmp/wrapper-kernels/python3 --sys-prefix && \
     jupyter wrapper-kernelspec install /tmp/wrapper-kernels/bash --sys-prefix && \
-    jlpm cache clean && \
-    npm cache clean --force && \
+    # jlpm cache clean && \
+    # npm cache clean --force && \
     fix-permissions /home/$NB_USER
 
 ### nbconfig
@@ -164,6 +165,6 @@ RUN apt-get update && apt-get install -yq lsyncd \
     && chmod +x /usr/local/bin/before-notebook.d/nbsearch-launch.sh /opt/nbsearch/update-index
 
 # Make classic notebook the default
-ENV DOCKER_STACKS_JUPYTER_CMD=nbclassic
+#ENV DOCKER_STACKS_JUPYTER_CMD=nbclassic
 
 USER $NB_USER
