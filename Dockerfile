@@ -61,58 +61,67 @@ RUN pip --no-cache-dir install folium
 #### Jupyter-LC_wrapper (NII) - https://github.com/NII-cloud-operation/Jupyter-LC_wrapper
 #### Jupyter-multi_outputs (NII) - https://github.com/NII-cloud-operation/Jupyter-multi_outputs
 #### Jupyter-LC_index (NII) - https://github.com/NII-cloud-operation/Jupyter-LC_index
-ENV nblineage_release_tag=0.2.0.test4-12 \
+ENV nblineage_release_tag=0.2.0.rc1 \
     nblineage_release_url=https://github.com/yacchin1205/Jupyter-LC_nblineage/releases/download/ \
-    # lc_index_release_tag=0.1.0.test4 \
-    # lc_index_release_url=https://github.com/yacchin1205/Jupyter-LC_index/releases/download/ \
-    lc_multi_outputs_release_tag=2.2.0.test4-5 \
-    lc_multi_outputs_release_url=https://github.com/yacchin1205/Jupyter-multi_outputs/releases/download/
-    # lc_run_through_release_tag=0.1.0.test1 \
-    # lc_run_through_release_url=https://github.com/yacchin1205/Jupyter-LC_run_through/releases/download/
+    lc_index_release_tag=0.2.0.rc1 \
+    lc_index_release_url=https://github.com/yacchin1205/Jupyter-LC_index/releases/download/ \
+    lc_multi_outputs_release_tag=2.2.0.rc1 \
+    lc_multi_outputs_release_url=https://github.com/yacchin1205/Jupyter-multi_outputs/releases/download/ \
+    lc_run_through_release_tag=0.2.0.rc1 \
+    lc_run_through_release_url=https://github.com/yacchin1205/Jupyter-LC_run_through/releases/download/ \
+    sidestickies_release_tag=0.3.0.test2 \
+    sidestickies_release_url=https://github.com/yacchin1205/sidestickies/releases/download/ \
+    nbsearch_release_tag=0.2.0.test5 \
+    nbsearch_release_url=https://github.com/yacchin1205/nbsearch/releases/download/
 RUN pip --no-cache-dir install jupyter_nbextensions_configurator && \
     pip --no-cache-dir install six bash_kernel \
     #https://github.com/NII-cloud-operation/jupyter_contrib_nbextensions/tarball/master \
     ${nblineage_release_url}${nblineage_release_tag}/nblineage-${nblineage_release_tag}.tar.gz \
-    # ${lc_run_through_release_url}${lc_run_through_release_tag}/lc_run_through-${lc_run_through_release_tag}.tar.gz \
+    ${lc_run_through_release_url}${lc_run_through_release_tag}/lc_run_through-${lc_run_through_release_tag}.tar.gz \
     https://github.com/NII-cloud-operation/Jupyter-LC_wrapper/tarball/master \
-    ${lc_multi_outputs_release_url}${lc_multi_outputs_release_tag}/lc_multi_outputs-${lc_multi_outputs_release_tag}.tar.gz
-    # ${lc_index_release_url}${lc_index_release_tag}/lc_index-${lc_index_release_tag}.tar.gz \
+    ${lc_multi_outputs_release_url}${lc_multi_outputs_release_tag}/lc_multi_outputs-${lc_multi_outputs_release_tag}.tar.gz \
+    ${lc_index_release_url}${lc_index_release_tag}/lc_index-${lc_index_release_tag}.tar.gz \
     #git+https://github.com/NII-cloud-operation/Jupyter-LC_notebook_diff.git \
-    #git+https://github.com/NII-cloud-operation/sidestickies.git \
-    #git+https://github.com/NII-cloud-operation/nbsearch.git \
+    ${sidestickies_release_url}${sidestickies_release_tag}/sidestickies-${sidestickies_release_tag}.tar.gz \
+    ${nbsearch_release_url}${nbsearch_release_tag}/nbsearch-${nbsearch_release_tag}.tar.gz
     #git+https://github.com/NII-cloud-operation/nbwhisper.git
 
 RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag}/nblineage-${nblineage_release_tag}.tgz && \
     jupyter labextension enable nblineage && \
     #jupyter contrib nbextension install --sys-prefix && \
-    jupyter server extension enable --py nblineage --sys-prefix && \
-    #jupyter nblineage quick-setup --sys-prefix && \
-    # jupyter labextension install ${lc_run_through_release_url}${lc_run_through_release_tag}/lc_run_through-${lc_run_through_release_tag}.tgz && \
-    # jupyter nbextension install --py lc_run_through --sys-prefix && \
-    # jupyter nbextension enable --py lc_run_through --sys-prefix && \
+    #jupyter server extension enable --py nblineage --sys-prefix && \
+    jupyter nblineage quick-setup --sys-prefix && \
+    jupyter labextension install ${lc_run_through_release_url}${lc_run_through_release_tag}/lc_run_through-${lc_run_through_release_tag}.tgz && \
+    jupyter labextension enable lc_run_through && \
+    jupyter nbclassic-extension install --py lc_run_through --sys-prefix && \
+    jupyter nbclassic-extension enable --py lc_run_through --sys-prefix && \
     jupyter labextension install ${lc_multi_outputs_release_url}${lc_multi_outputs_release_tag}/lc_multi_outputs-${lc_multi_outputs_release_tag}.tgz && \
     jupyter labextension enable lc_multi_outputs && \
-    # jupyter nbextension install --py lc_multi_outputs --sys-prefix && \
-    # jupyter nbextension enable --py lc_multi_outputs --sys-prefix && \
-    # jupyter labextension install ${lc_index_release_url}${lc_index_release_tag}/lc_index-${lc_index_release_tag}.tgz && \
-    # jupyter labextension enable lc_index && \
-    # jupyter nbextension install --py lc_index --sys-prefix && \
-    # jupyter nbextension enable --py lc_index --sys-prefix && \
+    jupyter nbclassic-extension install --py lc_multi_outputs --sys-prefix && \
+    jupyter nbclassic-extension enable --py lc_multi_outputs --sys-prefix && \
+    jupyter labextension install ${lc_index_release_url}${lc_index_release_tag}/lc_index-${lc_index_release_tag}.tgz && \
+    jupyter labextension enable lc_index && \
+    jupyter nbclassic-extension install --py lc_index --sys-prefix && \
+    jupyter nbclassic-extension enable --py lc_index --sys-prefix && \
     jupyter nbclassic-extension install --py lc_wrapper --sys-prefix && \
     jupyter nbclassic-extension enable --py lc_wrapper --sys-prefix && \
     # jupyter nbclassic-extension install --py lc_notebook_diff --sys-prefix && \
-    # jupyter nbclassic-extension install --py nbtags --sys-prefix && \
-    # jupyter nbclassic-serverextension enable --py nbtags --sys-prefix && \
-    # jupyter nbclassic-extension install --py nbsearch --sys-prefix && \
-    # jupyter nbclassic-serverextension enable --py nbsearch --sys-prefix && \
+    jupyter labextension install ${sidestickies_release_url}${sidestickies_release_tag}/sidestickies-${sidestickies_release_tag}.tgz && \
+    jupyter labextension enable nbtags && \
+    jupyter nbclassic-extension install --py nbtags --sys-prefix && \
+    jupyter nbclassic-serverextension enable --py nbtags --sys-prefix && \
+    jupyter labextension install ${nbsearch_release_url}${nbsearch_release_tag}/nbsearch-${nbsearch_release_tag}.tgz && \
+    jupyter labextension enable nbsearch && \
+    jupyter nbclassic-extension install --py nbsearch --sys-prefix && \
+    jupyter nbclassic-serverextension enable --py nbsearch --sys-prefix && \
     # jupyter nbclassic-extension install --py nbwhisper --sys-prefix && \
     # jupyter nbclassic-serverextension enable --py nbwhisper --sys-prefix && \
-    # jupyter nbclassic-extension install --py jupyter_nbextensions_configurator --sys-prefix && \
-    # jupyter nbclassic-extension enable --py jupyter_nbextensions_configurator --sys-prefix && \
-    # jupyter nbclassic-serverextension enable --py jupyter_nbextensions_configurator --sys-prefix && \
+    jupyter nbclassic-extension install --py jupyter_nbextensions_configurator --sys-prefix && \
+    jupyter nbclassic-extension enable --py jupyter_nbextensions_configurator --sys-prefix && \
+    jupyter nbclassic-serverextension enable --py jupyter_nbextensions_configurator --sys-prefix && \
     # jupyter nbclassic-extension enable contrib_nbextensions_help_item/main --sys-prefix && \
-    # jupyter nbclassic-extension enable collapsible_headings/main --sys-prefix && \
-    # jupyter nbclassic-extension enable toc2/main --sys-prefix && \
+    jupyter nbclassic-extension enable collapsible_headings/main --sys-prefix && \
+    jupyter nbclassic-extension enable toc2/main --sys-prefix && \
     python -m bash_kernel.install --sys-prefix && \
     jupyter kernelspec install /tmp/kernels/python3-wrapper --sys-prefix && \
     jupyter kernelspec install /tmp/kernels/bash-wrapper --sys-prefix && \
