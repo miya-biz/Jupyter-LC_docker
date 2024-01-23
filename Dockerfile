@@ -62,13 +62,15 @@ RUN pip --no-cache-dir install folium
 #### Jupyter-multi_outputs (NII) - https://github.com/NII-cloud-operation/Jupyter-multi_outputs
 #### Jupyter-LC_index (NII) - https://github.com/NII-cloud-operation/Jupyter-LC_index
 ENV nblineage_release_tag=0.2.0.rc1 \
-    nblineage_release_url=https://github.com/yacchin1205/Jupyter-LC_nblineage/releases/download/ \
+    nblineage_release_url=https://github.com/NII-cloud-operation/Jupyter-LC_nblineage/releases/download/ \
     lc_index_release_tag=0.2.0.rc1 \
-    lc_index_release_url=https://github.com/yacchin1205/Jupyter-LC_index/releases/download/ \
+    lc_index_release_url=https://github.com/NII-cloud-operation/Jupyter-LC_index/releases/download/ \
     lc_multi_outputs_release_tag=2.2.0.rc1 \
-    lc_multi_outputs_release_url=https://github.com/yacchin1205/Jupyter-multi_outputs/releases/download/ \
+    lc_multi_outputs_release_url=https://github.com/NII-cloud-operation/Jupyter-multi_outputs/releases/download/ \
     lc_run_through_release_tag=0.2.0.rc1 \
-    lc_run_through_release_url=https://github.com/yacchin1205/Jupyter-LC_run_through/releases/download/ \
+    lc_run_through_release_url=https://github.com/NII-cloud-operation/Jupyter-LC_run_through/releases/download/ \
+    diff_release_tag=0.2.0.test23 \
+    diff_release_url=https://github.com/yacchin1205/Jupyter-LC_notebook_diff/releases/download/ \
     sidestickies_release_tag=0.3.0.test2 \
     sidestickies_release_url=https://github.com/yacchin1205/sidestickies/releases/download/ \
     nbsearch_release_tag=0.2.0.test5 \
@@ -82,6 +84,7 @@ RUN pip --no-cache-dir install jupyter_nbextensions_configurator && \
     ${lc_multi_outputs_release_url}${lc_multi_outputs_release_tag}/lc_multi_outputs-${lc_multi_outputs_release_tag}.tar.gz \
     ${lc_index_release_url}${lc_index_release_tag}/lc_index-${lc_index_release_tag}.tar.gz \
     #git+https://github.com/NII-cloud-operation/Jupyter-LC_notebook_diff.git \
+    ${diff_release_url}${diff_release_tag}/lc_notebook_diff-${diff_release_tag}.tar.gz \
     ${sidestickies_release_url}${sidestickies_release_tag}/sidestickies-${sidestickies_release_tag}.tar.gz \
     ${nbsearch_release_url}${nbsearch_release_tag}/nbsearch-${nbsearch_release_tag}.tar.gz
     #git+https://github.com/NII-cloud-operation/nbwhisper.git
@@ -105,7 +108,10 @@ RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag
     jupyter nbclassic-extension enable --py lc_index --sys-prefix && \
     jupyter nbclassic-extension install --py lc_wrapper --sys-prefix && \
     jupyter nbclassic-extension enable --py lc_wrapper --sys-prefix && \
-    # jupyter nbclassic-extension install --py lc_notebook_diff --sys-prefix && \
+    jupyter nbclassic-extension install --py lc_notebook_diff --sys-prefix && \
+    jupyter nbclassic-extension enable --py lc_notebook_diff --sys-prefix && \
+    jupyter labextension install ${diff_release_url}${diff_release_tag}/lc_notebook_diff-${diff_release_tag}.tgz && \
+    jupyter labextension enable lc_notebook_diff && \
     jupyter labextension install ${sidestickies_release_url}${sidestickies_release_tag}/sidestickies-${sidestickies_release_tag}.tgz && \
     jupyter labextension enable nbtags && \
     jupyter nbclassic-extension install --py nbtags --sys-prefix && \
