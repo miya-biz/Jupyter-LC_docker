@@ -112,11 +112,13 @@ RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag
     jupyter labextension install ${diff_release_url}${diff_release_tag}/lc_notebook_diff-${diff_release_tag}.tgz && \
     jupyter labextension enable lc_notebook_diff && \
     jupyter labextension install ${sidestickies_release_url}${sidestickies_release_tag}/sidestickies-${sidestickies_release_tag}.tgz && \
+    jupyter labextension disable sidestickies && \
     jupyter nbclassic-extension install --py nbtags --sys-prefix && \
     jupyter nbclassic-serverextension enable --py nbtags --sys-prefix && \
     jupyter labextension install ${nbsearch_release_url}${nbsearch_release_tag}/nbsearch-${nbsearch_release_tag}.tgz && \
     jupyter nbclassic-extension install --py nbsearch --sys-prefix && \
     jupyter nbclassic-serverextension enable --py nbsearch --sys-prefix && \
+    jupyter labextension disable nbsearch && \
     # jupyter nbclassic-extension install --py nbwhisper --sys-prefix && \
     # jupyter nbclassic-serverextension enable --py nbwhisper --sys-prefix && \
     jupyter nbclassic-extension install --py jupyter_nbextensions_configurator --sys-prefix && \
