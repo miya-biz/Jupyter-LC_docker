@@ -63,18 +63,18 @@ RUN pip --no-cache-dir install folium
 #### Jupyter-LC_index (NII) - https://github.com/NII-cloud-operation/Jupyter-LC_index
 ENV nblineage_release_tag=0.2.0.rc1 \
     nblineage_release_url=https://github.com/NII-cloud-operation/Jupyter-LC_nblineage/releases/download/ \
-    lc_index_release_tag=0.2.0.rc1 \
+    lc_index_release_tag=0.2.0.rc2 \
     lc_index_release_url=https://github.com/NII-cloud-operation/Jupyter-LC_index/releases/download/ \
     lc_multi_outputs_release_tag=2.2.0.rc1 \
     lc_multi_outputs_release_url=https://github.com/NII-cloud-operation/Jupyter-multi_outputs/releases/download/ \
     lc_run_through_release_tag=0.2.0.rc1 \
     lc_run_through_release_url=https://github.com/NII-cloud-operation/Jupyter-LC_run_through/releases/download/ \
-    diff_release_tag=0.2.0.test23 \
-    diff_release_url=https://github.com/yacchin1205/Jupyter-LC_notebook_diff/releases/download/ \
-    sidestickies_release_tag=0.3.0.test2 \
-    sidestickies_release_url=https://github.com/yacchin1205/sidestickies/releases/download/ \
-    nbsearch_release_tag=0.2.0.test5 \
-    nbsearch_release_url=https://github.com/yacchin1205/nbsearch/releases/download/
+    diff_release_tag=0.2.0.rc1 \
+    diff_release_url=https://github.com/NII-cloud-operation/Jupyter-LC_notebook_diff/releases/download/ \
+    sidestickies_release_tag=0.3.0.rc4 \
+    sidestickies_release_url=https://github.com/NII-cloud-operation/sidestickies/releases/download/ \
+    nbsearch_release_tag=0.2.0.rc2 \
+    nbsearch_release_url=https://github.com/NII-cloud-operation/nbsearch/releases/download/
 RUN pip --no-cache-dir install jupyter_nbextensions_configurator && \
     pip --no-cache-dir install six bash_kernel \
     #https://github.com/NII-cloud-operation/jupyter_contrib_nbextensions/tarball/master \
@@ -83,7 +83,6 @@ RUN pip --no-cache-dir install jupyter_nbextensions_configurator && \
     https://github.com/NII-cloud-operation/Jupyter-LC_wrapper/tarball/master \
     ${lc_multi_outputs_release_url}${lc_multi_outputs_release_tag}/lc_multi_outputs-${lc_multi_outputs_release_tag}.tar.gz \
     ${lc_index_release_url}${lc_index_release_tag}/lc_index-${lc_index_release_tag}.tar.gz \
-    #git+https://github.com/NII-cloud-operation/Jupyter-LC_notebook_diff.git \
     ${diff_release_url}${diff_release_tag}/lc_notebook_diff-${diff_release_tag}.tar.gz \
     ${sidestickies_release_url}${sidestickies_release_tag}/sidestickies-${sidestickies_release_tag}.tar.gz \
     ${nbsearch_release_url}${nbsearch_release_tag}/nbsearch-${nbsearch_release_tag}.tar.gz
@@ -113,11 +112,9 @@ RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag
     jupyter labextension install ${diff_release_url}${diff_release_tag}/lc_notebook_diff-${diff_release_tag}.tgz && \
     jupyter labextension enable lc_notebook_diff && \
     jupyter labextension install ${sidestickies_release_url}${sidestickies_release_tag}/sidestickies-${sidestickies_release_tag}.tgz && \
-    jupyter labextension enable nbtags && \
     jupyter nbclassic-extension install --py nbtags --sys-prefix && \
     jupyter nbclassic-serverextension enable --py nbtags --sys-prefix && \
     jupyter labextension install ${nbsearch_release_url}${nbsearch_release_tag}/nbsearch-${nbsearch_release_tag}.tgz && \
-    jupyter labextension enable nbsearch && \
     jupyter nbclassic-extension install --py nbsearch --sys-prefix && \
     jupyter nbclassic-serverextension enable --py nbsearch --sys-prefix && \
     # jupyter nbclassic-extension install --py nbwhisper --sys-prefix && \
@@ -136,6 +133,11 @@ RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag
     # jlpm cache clean && \
     # npm cache clean --force && \
     fix-permissions /home/$NB_USER
+
+    # To enable the nbsearch or sidestickies, you need to run the following command in the notebook.
+    # jupyter labextension enable nbtags
+    # jupyter labextension enable nbsearch
+
 
 ### nbconfig
 RUN mkdir -p $CONDA_DIR/etc/jupyter/nbconfig/notebook.d && \
