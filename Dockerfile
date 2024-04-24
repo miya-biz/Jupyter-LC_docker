@@ -31,9 +31,9 @@ RUN mkdir -p /opt/minio/bin/ && \
     curl -L https://dl.min.io/server/minio/release/linux-amd64/minio > /opt/minio/bin/minio && \
     chmod +x /opt/minio/bin/minio && mkdir -p /var/minio && chown jovyan:users -R /var/minio
 
+RUN pip install jupyter-server-proxy && \
+    jupyter server extension enable --sys-prefix jupyter_server_proxy
 COPY ./nbsearch /tmp/nbsearch
-RUN pip install /tmp/nbsearch jupyter_nbextensions_configurator jupyter-server-proxy && \
-    jupyter serverextension enable --sys-prefix jupyter_server_proxy
 RUN mkdir -p /usr/local/bin/before-notebook.d && \
     cp /tmp/nbsearch/example/*.sh /usr/local/bin/before-notebook.d/ && \
     chmod +x /usr/local/bin/before-notebook.d/*.sh && \
@@ -67,11 +67,13 @@ RUN apt-get update && apt-get install -y expect && \
 
 RUN rm /home/$NB_USER/*.ipynb
 
-RUN jupyter nbclassic-extension enable --py nbtags --sys-prefix
+RUN jupyter labextension enable sidestickies && \
+    jupyter nbclassic-extension enable --py nbtags --sys-prefix
 ENV SIDESTICKIES_SCRAPBOX_PROJECT_ID sidestickies-public
-USER $NB_USER
 
 # for nbsearch -->
+RUN jupyter labextension enable nbsearch
+USER $NB_USER
 RUN mkdir -p /home/$NB_USER/.nbsearch && \
     cp /tmp/nbsearch/example/config_*.py /home/$NB_USER/.nbsearch/
 
