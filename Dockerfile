@@ -1,6 +1,6 @@
 FROM solr:8 AS solr
 
-FROM niicloudoperation/notebook:latest
+FROM niicloudoperation/notebook:feature-lab
 
 USER root
 
