@@ -24,12 +24,6 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy config files
-ADD conf /tmp/
-RUN mkdir -p $CONDA_DIR/etc/jupyter && \
-    cp -f /tmp/jupyter_notebook_config.py \
-       $CONDA_DIR/etc/jupyter/jupyter_notebook_config.py
-
 SHELL ["/bin/bash", "-c"]
 
 ### ansible
@@ -46,9 +40,6 @@ RUN apt-get update && apt-get install -y virtinst dnsutils zip tree jq rsync ipu
     conda install --quiet --yes papermill && \
     pip --no-cache-dir install netaddr pyapi-gitlab runipy pysnmp pysnmp-mibs && \
     conda clean --all -f -y
-
-### Add files
-RUN mkdir -p /etc/ansible && cp /tmp/ansible.cfg /etc/ansible/ansible.cfg
 
 #### Visualization
 RUN pip --no-cache-dir install folium
@@ -127,11 +118,6 @@ RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag
     # jupyter nbclassic-extension enable contrib_nbextensions_help_item/main --sys-prefix && \
     jupyter nbclassic-extension enable collapsible_headings/main --sys-prefix && \
     jupyter nbclassic-extension enable toc2/main --sys-prefix && \
-    python -m bash_kernel.install --sys-prefix && \
-    jupyter kernelspec install /tmp/kernels/python3-wrapper --sys-prefix && \
-    jupyter kernelspec install /tmp/kernels/bash-wrapper --sys-prefix && \
-    jupyter wrapper-kernelspec install /tmp/wrapper-kernels/python3 --sys-prefix && \
-    jupyter wrapper-kernelspec install /tmp/wrapper-kernels/bash --sys-prefix && \
     # jlpm cache clean && \
     # npm cache clean --force && \
     fix-permissions /home/$NB_USER
@@ -140,6 +126,22 @@ RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag
     # jupyter labextension enable nbtags
     # jupyter labextension enable nbsearch
 
+# Copy config files
+ADD conf /tmp/
+RUN mkdir -p $CONDA_DIR/etc/jupyter && \
+    cp -f /tmp/jupyter_notebook_config.py \
+       $CONDA_DIR/etc/jupyter/jupyter_notebook_config.py && \
+    mkdir -p /etc/ansible && cp /tmp/ansible.cfg /etc/ansible/ansible.cfg
+
+### kernels
+RUN chmod +x /tmp/wrapper-kernels/prepare-icons.sh && \
+    /tmp/wrapper-kernels/prepare-icons.sh && \
+    python -m bash_kernel.install --sys-prefix && \
+    jupyter kernelspec install /tmp/kernels/python3-wrapper --sys-prefix && \
+    jupyter kernelspec install /tmp/kernels/bash-wrapper --sys-prefix && \
+    jupyter wrapper-kernelspec install /tmp/wrapper-kernels/python3 --sys-prefix && \
+    jupyter wrapper-kernelspec install /tmp/wrapper-kernels/bash --sys-prefix && \
+    fix-permissions /home/$NB_USER
 
 ### nbconfig
 RUN mkdir -p $CONDA_DIR/etc/jupyter/nbconfig/notebook.d && \
