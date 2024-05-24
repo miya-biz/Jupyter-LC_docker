@@ -127,11 +127,6 @@ RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag
     # jupyter nbclassic-extension enable contrib_nbextensions_help_item/main --sys-prefix && \
     jupyter nbclassic-extension enable collapsible_headings/main --sys-prefix && \
     jupyter nbclassic-extension enable toc2/main --sys-prefix && \
-    python -m bash_kernel.install --sys-prefix && \
-    jupyter kernelspec install /tmp/kernels/python3-wrapper --sys-prefix && \
-    jupyter kernelspec install /tmp/kernels/bash-wrapper --sys-prefix && \
-    jupyter wrapper-kernelspec install /tmp/wrapper-kernels/python3 --sys-prefix && \
-    jupyter wrapper-kernelspec install /tmp/wrapper-kernels/bash --sys-prefix && \
     # jlpm cache clean && \
     # npm cache clean --force && \
     fix-permissions /home/$NB_USER
@@ -140,6 +135,15 @@ RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag
     # jupyter labextension enable nbtags
     # jupyter labextension enable nbsearch
 
+### kernels
+RUN chmod +x /tmp/wrapper-kernels/prepare-icons.sh && \
+    /tmp/wrapper-kernels/prepare-icons.sh && \
+    python -m bash_kernel.install --sys-prefix && \
+    jupyter kernelspec install /tmp/kernels/python3-wrapper --sys-prefix && \
+    jupyter kernelspec install /tmp/kernels/bash-wrapper --sys-prefix && \
+    jupyter wrapper-kernelspec install /tmp/wrapper-kernels/python3 --sys-prefix && \
+    jupyter wrapper-kernelspec install /tmp/wrapper-kernels/bash --sys-prefix && \
+    fix-permissions /home/$NB_USER
 
 ### nbconfig
 RUN mkdir -p $CONDA_DIR/etc/jupyter/nbconfig/notebook.d && \
