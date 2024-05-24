@@ -24,12 +24,6 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy config files
-ADD conf /tmp/
-RUN mkdir -p $CONDA_DIR/etc/jupyter && \
-    cp -f /tmp/jupyter_notebook_config.py \
-       $CONDA_DIR/etc/jupyter/jupyter_notebook_config.py
-
 SHELL ["/bin/bash", "-c"]
 
 ### ansible
@@ -46,9 +40,6 @@ RUN apt-get update && apt-get install -y virtinst dnsutils zip tree jq rsync ipu
     conda install --quiet --yes papermill && \
     pip --no-cache-dir install netaddr pyapi-gitlab runipy pysnmp pysnmp-mibs && \
     conda clean --all -f -y
-
-### Add files
-RUN mkdir -p /etc/ansible && cp /tmp/ansible.cfg /etc/ansible/ansible.cfg
 
 #### Visualization
 RUN pip --no-cache-dir install folium
@@ -134,6 +125,13 @@ RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag
     # To enable the nbsearch or sidestickies, you need to run the following command in the notebook.
     # jupyter labextension enable nbtags
     # jupyter labextension enable nbsearch
+
+# Copy config files
+ADD conf /tmp/
+RUN mkdir -p $CONDA_DIR/etc/jupyter && \
+    cp -f /tmp/jupyter_notebook_config.py \
+       $CONDA_DIR/etc/jupyter/jupyter_notebook_config.py && \
+    mkdir -p /etc/ansible && cp /tmp/ansible.cfg /etc/ansible/ansible.cfg
 
 ### kernels
 RUN chmod +x /tmp/wrapper-kernels/prepare-icons.sh && \

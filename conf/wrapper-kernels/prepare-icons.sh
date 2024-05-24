@@ -16,7 +16,7 @@ KERNEL_PATH=${BASE_PATH}/python3
 SOURCE_PATH=/opt/conda/share/jupyter/kernels/python3
 cp ${SOURCE_PATH}/logo-32x32.png ${KERNEL_PATH}/logo-32x32.png
 cp ${SOURCE_PATH}/logo-64x64.png ${KERNEL_PATH}/logo-64x64.png
-cp ${SOURCE_PATH}/logo.svg ${KERNEL_PATH}/logo-svg.svg
+cp ${SOURCE_PATH}/logo-svg.svg ${KERNEL_PATH}/logo-svg.svg
 
 # For Bash, copy the icons from https://github.com/odb/official-bash-logo/
 # ex.) https://github.com/odb/official-bash-logo/blob/master/assets/Logos/Icons/PNG/16x16.png
