@@ -68,6 +68,7 @@ ENV nblineage_release_tag=0.2.0.rc1 \
     nbsearch_release_url=https://github.com/NII-cloud-operation/nbsearch/releases/download/
 RUN pip --no-cache-dir install jupyter_nbextensions_configurator && \
     pip --no-cache-dir install six bash_kernel \
+    jupyterlab-language-pack-ja-JP \
     #https://github.com/NII-cloud-operation/jupyter_contrib_nbextensions/tarball/master \
     ${nblineage_release_url}${nblineage_release_tag}/nblineage-${nblineage_release_tag}.tar.gz \
     ${lc_run_through_release_url}${lc_run_through_release_tag}/lc_run_through-${lc_run_through_release_tag}.tar.gz \
