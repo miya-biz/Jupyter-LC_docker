@@ -1,4 +1,4 @@
-FROM jupyter/scipy-notebook:latest
+FROM quay.io/jupyter/scipy-notebook:latest
 MAINTAINER https://github.com/NII-cloud-operation
 
 USER root
@@ -81,20 +81,16 @@ RUN pip --no-cache-dir install jupyter_nbextensions_configurator && \
     #git+https://github.com/NII-cloud-operation/nbwhisper.git
 
 RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag}/nblineage-${nblineage_release_tag}.tgz && \
-    jupyter labextension enable nblineage && \
     #jupyter contrib nbextension install --sys-prefix && \
     #jupyter server extension enable --py nblineage --sys-prefix && \
     jupyter nblineage quick-setup --sys-prefix && \
     jupyter labextension install ${lc_run_through_release_url}${lc_run_through_release_tag}/lc_run_through-${lc_run_through_release_tag}.tgz && \
-    jupyter labextension enable lc_run_through && \
     jupyter nbclassic-extension install --py lc_run_through --sys-prefix && \
     jupyter nbclassic-extension enable --py lc_run_through --sys-prefix && \
     jupyter labextension install ${lc_multi_outputs_release_url}${lc_multi_outputs_release_tag}/lc_multi_outputs-${lc_multi_outputs_release_tag}.tgz && \
-    jupyter labextension enable lc_multi_outputs && \
     jupyter nbclassic-extension install --py lc_multi_outputs --sys-prefix && \
     jupyter nbclassic-extension enable --py lc_multi_outputs --sys-prefix && \
     jupyter labextension install ${lc_index_release_url}${lc_index_release_tag}/lc_index-${lc_index_release_tag}.tgz && \
-    jupyter labextension enable lc_index && \
     jupyter nbclassic-extension install --py lc_index --sys-prefix && \
     jupyter nbclassic-extension enable --py lc_index --sys-prefix && \
     jupyter nbclassic-extension install --py lc_wrapper --sys-prefix && \
@@ -102,15 +98,12 @@ RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag
     jupyter nbclassic-extension install --py lc_notebook_diff --sys-prefix && \
     jupyter nbclassic-extension enable --py lc_notebook_diff --sys-prefix && \
     jupyter labextension install ${diff_release_url}${diff_release_tag}/lc_notebook_diff-${diff_release_tag}.tgz && \
-    jupyter labextension enable lc_notebook_diff && \
     jupyter labextension install ${sidestickies_release_url}${sidestickies_release_tag}/sidestickies-${sidestickies_release_tag}.tgz && \
-    jupyter labextension disable sidestickies && \
     jupyter nbclassic-extension install --py nbtags --sys-prefix && \
     jupyter nbclassic-serverextension enable --py nbtags --sys-prefix && \
     jupyter labextension install ${nbsearch_release_url}${nbsearch_release_tag}/nbsearch-${nbsearch_release_tag}.tgz && \
     jupyter nbclassic-extension install --py nbsearch --sys-prefix && \
     jupyter nbclassic-serverextension enable --py nbsearch --sys-prefix && \
-    jupyter labextension disable nbsearch && \
     # jupyter nbclassic-extension install --py nbwhisper --sys-prefix && \
     # jupyter nbclassic-serverextension enable --py nbwhisper --sys-prefix && \
     jupyter nbclassic-extension install --py jupyter_nbextensions_configurator --sys-prefix && \
@@ -123,9 +116,11 @@ RUN jupyter labextension install ${nblineage_release_url}${nblineage_release_tag
     # npm cache clean --force && \
     fix-permissions /home/$NB_USER
 
-    # To enable the nbsearch or sidestickies, you need to run the following command in the notebook.
-    # jupyter labextension enable nbtags
-    # jupyter labextension enable nbsearch
+# To enable the nbsearch or sidestickies, you need to run the following command in the notebook.
+# jupyter labextension enable nbtags
+# jupyter labextension enable nbsearch
+RUN jupyter labextension disable nbtags --level=system && \
+    jupyter labextension disable nbsearch --level=system
 
 # Copy config files
 ADD conf /tmp/
