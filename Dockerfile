@@ -51,6 +51,10 @@ RUN pip --no-cache-dir install folium
 #### Jupyter-LC_wrapper (NII) - https://github.com/NII-cloud-operation/Jupyter-LC_wrapper
 #### Jupyter-multi_outputs (NII) - https://github.com/NII-cloud-operation/Jupyter-multi_outputs
 #### Jupyter-LC_index (NII) - https://github.com/NII-cloud-operation/Jupyter-LC_index
+#### Jupyter-LC_notebook_diff (NII) - https://github.com/NII-cloud-operation/Jupyter-LC_notebook_diff
+#### sidestickies (NII) - https://github.com/NII-cloud-operation/sidestickies
+#### nbsearch (NII) - https://github.com/NII-cloud-operation/nbsearch
+#### nbwhisper (NII) - https://github.com/NII-cloud-operation/nbwhisper
 ENV nblineage_release_tag=0.2.0.rc1 \
     nblineage_release_url=https://github.com/NII-cloud-operation/Jupyter-LC_nblineage/releases/download/ \
     lc_index_release_tag=0.2.0.rc3 \
@@ -64,7 +68,9 @@ ENV nblineage_release_tag=0.2.0.rc1 \
     sidestickies_release_tag=0.3.0.rc4 \
     sidestickies_release_url=https://github.com/NII-cloud-operation/sidestickies/releases/download/ \
     nbsearch_release_tag=0.2.0.rc2 \
-    nbsearch_release_url=https://github.com/NII-cloud-operation/nbsearch/releases/download/
+    nbsearch_release_url=https://github.com/NII-cloud-operation/nbsearch/releases/download/ \
+    nbwhisper_release_tag=0.2.0.rc1 \
+    nbwhisper_release_url=https://github.com/NII-cloud-operation/nbwhisper/releases/download/
 RUN pip --no-cache-dir install jupyter_nbextensions_configurator && \
     pip --no-cache-dir install six bash_kernel \
     jupyterlab-language-pack-ja-JP \
@@ -75,8 +81,8 @@ RUN pip --no-cache-dir install jupyter_nbextensions_configurator && \
     ${lc_index_release_url}${lc_index_release_tag}/lc_index-${lc_index_release_tag}.tar.gz \
     ${diff_release_url}${diff_release_tag}/lc_notebook_diff-${diff_release_tag}.tar.gz \
     ${sidestickies_release_url}${sidestickies_release_tag}/sidestickies-${sidestickies_release_tag}.tar.gz \
-    ${nbsearch_release_url}${nbsearch_release_tag}/nbsearch-${nbsearch_release_tag}.tar.gz
-    #git+https://github.com/NII-cloud-operation/nbwhisper.git
+    ${nbsearch_release_url}${nbsearch_release_tag}/nbsearch-${nbsearch_release_tag}.tar.gz \
+    ${nbwhisper_release_url}${nbwhisper_release_tag}/nbwhisper-${nbwhisper_release_tag}.tar.gz
 
 RUN jupyter nblineage quick-setup --sys-prefix && \
     jupyter nbclassic-extension install --py lc_run_through --sys-prefix && \
@@ -105,8 +111,10 @@ RUN jupyter nblineage quick-setup --sys-prefix && \
 # To enable the nbsearch or sidestickies, you need to run the following command in the notebook.
 # jupyter labextension enable sidestickies --level=user
 # jupyter labextension enable nbsearch --level=user
+# jupyter labextension enable nbwhisper --level=user
 RUN jupyter labextension disable sidestickies --level=system && \
-    jupyter labextension disable nbsearch --level=system
+    jupyter labextension disable nbsearch --level=system && \
+    jupyter labextension disable nbwhisper --level=system
 
 # Copy config files
 ADD conf /tmp/
