@@ -1,4 +1,4 @@
-FROM quay.io/jupyter/scipy-notebook:2023-12-25
+FROM quay.io/jupyter/scipy-notebook:notebook-7.2.0
 MAINTAINER https://github.com/NII-cloud-operation
 
 USER root
@@ -105,8 +105,8 @@ RUN jupyter nblineage quick-setup --sys-prefix && \
 # To enable the nbsearch or sidestickies, you need to run the following command in the notebook.
 # jupyter labextension enable sidestickies --level=user
 # jupyter labextension enable nbsearch --level=user
-RUN jupyter labextension disable sidestickies --level=user && \
-    jupyter labextension disable nbsearch --level=user
+RUN jupyter labextension disable sidestickies --level=system && \
+    jupyter labextension disable nbsearch --level=system
 
 # Copy config files
 ADD conf /tmp/
@@ -166,6 +166,9 @@ RUN apt-get update && apt-get install -yq lsyncd \
     && cp /tmp/nbsearch/launch.sh /usr/local/bin/before-notebook.d/nbsearch-launch.sh \
     && cp /tmp/nbsearch/update-index* /opt/nbsearch/ \
     && chmod +x /usr/local/bin/before-notebook.d/nbsearch-launch.sh /opt/nbsearch/update-index
+
+# Workaround for https://github.com/NII-cloud-operation/Jupyter-LC_wrapper/issues/71
+RUN pip install --upgrade jupyter_core==5.6.1
 
 # Make classic notebook the default
 #ENV DOCKER_STACKS_JUPYTER_CMD=nbclassic
