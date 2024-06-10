@@ -3,7 +3,7 @@ import { execSync } from 'child_process';
 
 test.beforeAll(() => {
   // Dockerコンテナを起動
-  execSync('docker run -d --name jupyter_lab_container -p 8888:8888 dockerall:test start-notebook.sh --NotebookApp.token="" --NotebookApp.password=""');
+  execSync('docker run -d --name jupyter_lab_container -p 8888:8888 niicloudoperation/notebook start-notebook.sh --NotebookApp.token="" --NotebookApp.password=""');
 });
 
 test.afterAll(() => {
@@ -12,9 +12,10 @@ test.afterAll(() => {
   execSync('docker rm jupyter_lab_container');
 });
 
-const delay = async (time) => {
-  return await new Promise(resolve => setTimeout(resolve, time));
-};
+function delay(ms: number) {
+  // https://stackoverflow.com/questions/37764665/how-to-implement-sleep-function-in-typescript
+  return new Promise( resolve => setTimeout(resolve, ms) );
+}
 
 test('should emit an activation console message', async ({ page }) => {
   const logs: string[] = [];
