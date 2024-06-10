@@ -7,7 +7,7 @@ module.exports = {
   ...baseConfig,
   use: {
     baseURL: 'http://localhost:8888/lab',
-    headless: false,
+    headless: true,
     viewport: { width: 1280, height: 720 },
   }
 };
