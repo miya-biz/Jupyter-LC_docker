@@ -43,10 +43,10 @@ jobs:
       - name: Remove Docker container
         run: docker rm jupyter_lab_container
 
-      - name: Install dependencies
+      - name: Install dependencies And Run Playwright tests
         run: |
           cd ./ui-tests
           npm install
-
-      - name: Run Playwright tests
-        run: npx playwright test
+          npx playwright install
+          npx playwright test
+          cd ..
