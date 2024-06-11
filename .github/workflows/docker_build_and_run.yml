@@ -32,7 +32,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Build Docker image
-        run: docker buildx build --cache-from type=local,src=/tmp/.buildx-cache --cache-to type=local,dest=/tmp/.buildx-cache --tag niicloudoperation/notebook .
+        run: docker buildx build --cache-from type=local,src=/tmp/.buildx-cache --cache-to type=local,dest=/tmp/.buildx-cache --tag niicloudoperation/notebook . --load
 
       - name: Check if Docker build cache path exists
         run: |
