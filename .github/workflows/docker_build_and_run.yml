@@ -12,6 +12,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -31,3 +36,17 @@ jobs:
 
       - name: Verify Docker container is running
         run: docker ps -a
+
+      - name: Stop Docker container
+        run: docker stop jupyter_lab_container
+
+      - name: Remove Docker container
+        run: docker rm jupyter_lab_container
+
+      - name: Install dependencies
+        run: |
+          cd ./ui-tests
+          npm install
+
+      - name: Run Playwright tests
+        run: npx playwright test
