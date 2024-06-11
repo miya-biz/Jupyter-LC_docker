@@ -35,6 +35,8 @@ jobs:
           push: false
           tags: niicloudoperation/notebook
           load: true
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
       - name: Check if Docker build cache path exists
         run: |
