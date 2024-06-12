@@ -17,6 +17,7 @@ function delay(ms: number) {
   return new Promise( resolve => setTimeout(resolve, ms) );
 }
 
+// Prtest
 test.setTimeout(90000);
 test('should emit an activation console message', async ({ page }) => {
   const logs: string[] = [];
