@@ -3,6 +3,8 @@ name: Docker Build and Run
 on:
   push:
     tags: '*'
+  pull_request:
+    branches: '*'
 
 jobs:
   build-and-run:
