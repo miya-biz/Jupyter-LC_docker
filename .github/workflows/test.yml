@@ -1,9 +1,12 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
+  push:
+    tags:
+      - '*' # 任意のタグに対するプッシュイベント
   pull_request:
     branches:
-      - '*'
+      - '*' # 任意のブランチに対するプルリクエストイベント
 
 jobs:
   Explore-GitHub-Actions:
