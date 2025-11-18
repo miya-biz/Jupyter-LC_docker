@@ -47,7 +47,7 @@ def main() -> int:
     RESULT_ROOT.mkdir(parents=True, exist_ok=True)
 
     if not notebooks:
-        print("No notebooks to execute. Add notebooks under tests/e2e/notebooks.")
+        print("No notebooks to execute. Add notebooks under ui-tests/e2e-notebook/notebooks.")
         return 0
 
     failures: list[Path] = []

@@ -26,7 +26,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('tests/e2e/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('ui-tests/e2e-notebook/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
@@ -34,7 +34,7 @@ jobs:
         run: |
           set -euxo pipefail
           pip install --upgrade pip
-          pip install -r tests/e2e/requirements.txt
+          pip install -r ui-tests/e2e-notebook/requirements.txt
 
       - name: Install Playwright browsers
         run: |
@@ -65,7 +65,7 @@ jobs:
       - name: Wait for services
         run: |
           set -euxo pipefail
-          tests/e2e/scripts/wait-for-services.sh
+          ui-tests/e2e-notebook/scripts/wait-for-services.sh
 
       - name: Run notebook E2E tests
         env:
@@ -73,14 +73,14 @@ jobs:
           JUPYTER_URL: 'http://localhost:8888'
         run: |
           set -euxo pipefail
-          python tests/e2e/run_notebooks.py
+          python ui-tests/e2e-notebook/run_notebooks.py
 
       - name: Gather Docker logs
         if: always()
         run: |
           set -euxo pipefail
-          mkdir -p tests/e2e/artifacts
-          docker logs jupyter_e2e_container > tests/e2e/artifacts/jupyter.log 2>&1 || true
+          mkdir -p ui-tests/e2e-notebook/artifacts
+          docker logs jupyter_e2e_container > ui-tests/e2e-notebook/artifacts/jupyter.log 2>&1 || true
 
       - name: Upload artifacts
         if: always()
@@ -88,7 +88,7 @@ jobs:
         with:
           name: e2e-results
           path: |
-            tests/e2e/artifacts
+            ui-tests/e2e-notebook/artifacts
 
       - name: Stop Docker container
         if: always()
