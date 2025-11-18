@@ -1,0 +1,99 @@
+name: E2E Tests
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  notebook-e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('tests/e2e/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python dependencies
+        run: |
+          set -euxo pipefail
+          pip install --upgrade pip
+          pip install -r tests/e2e/requirements.txt
+
+      - name: Install Playwright browsers
+        run: |
+          set -euxo pipefail
+          python -m playwright install --with-deps
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and load Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: niicloudoperation/notebook
+          load: true
+          no-cache: true
+
+      - name: Run Docker container
+        run: |
+          docker run -d --name jupyter_e2e_container -p 8888:8888 \
+            niicloudoperation/notebook start-notebook.sh \
+            --NotebookApp.token="" --NotebookApp.password=""
+
+      - name: Verify Docker container is running
+        run: docker ps -a
+
+      - name: Wait for services
+        run: |
+          set -euxo pipefail
+          tests/e2e/scripts/wait-for-services.sh
+
+      - name: Run notebook E2E tests
+        env:
+          E2E_TRANSITION_TIMEOUT: '30000'
+          JUPYTER_URL: 'http://localhost:8888'
+        run: |
+          set -euxo pipefail
+          python tests/e2e/run_notebooks.py
+
+      - name: Gather Docker logs
+        if: always()
+        run: |
+          set -euxo pipefail
+          mkdir -p tests/e2e/artifacts
+          docker logs jupyter_e2e_container > tests/e2e/artifacts/jupyter.log 2>&1 || true
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results
+          path: |
+            tests/e2e/artifacts
+
+      - name: Stop Docker container
+        if: always()
+        run: docker stop jupyter_e2e_container
+
+      - name: Remove Docker container
+        if: always()
+        run: docker rm jupyter_e2e_container
