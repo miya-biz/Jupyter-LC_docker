@@ -37,7 +37,7 @@ async def run_pw(
     if current_browser is None:
         current_browser = await playwright.chromium.launch(
             headless=True,
-            args=["--no-sandbox", "--disable-dev-shm-usage", "--lang=ja"]
+            args=["--no-sandbox", "--disable-dev-shm-usage", "--lang=ja"],
         )
 
     global current_contexts
@@ -71,9 +71,10 @@ async def run_pw(
         except Exception:
             if context_close_on_fail:
                 await finish_pw_context(screenshot=screenshot, last_path=last_path)
+                raise
+            if screenshot:
+                await _save_screenshot()
             raise
-    if screenshot:
-        await _save_screenshot()
     if next_page is not None:
         current_pages.append(next_page)
     screenshot_path = os.path.join(temp_dir, "screenshot.png")
@@ -121,10 +122,10 @@ async def init_pw_context(close_on_fail=True, last_path=None):
     global current_contexts
     if current_browser is not None:
         await current_browser.close()
-    current_browser = None
+        current_browser = None
     if playwright is not None:
         await playwright.stop()
-    playwright = None
+        playwright = None
     playwright = await async_playwright().start()
     current_session_id = datetime.now().strftime("%Y%m%d-%H%M%S")
     default_last_path = last_path or os.path.join(
@@ -144,7 +145,7 @@ async def finish_pw_context(screenshot=False, last_path=None):
     await _finish_pw_context(screenshot=screenshot, last_path=last_path)
     if current_browser is not None:
         await current_browser.close()
-    current_browser = None
+        current_browser = None
 
 
 async def save_screenshot(path):
