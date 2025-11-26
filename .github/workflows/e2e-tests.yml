@@ -60,16 +60,15 @@ jobs:
       - name: Free up disk space
         run: |
           echo "=== Cleaning up disk space ==="
-          # Remove unnecessary tools and packages
+          # Remove unnecessary tools and packages (but keep Python!)
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /opt/ghc
           sudo rm -rf /opt/hostedtoolcache/CodeQL
-          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
           # Clean apt cache
           sudo apt-get clean
-          # Clean Docker
-          docker system prune -af --volumes
+          # Clean Docker (only dangling images)
+          docker system prune -f
           echo "=== Disk space after cleanup ==="
           df -h
 
