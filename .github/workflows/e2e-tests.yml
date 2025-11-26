@@ -17,6 +17,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Check initial disk space
+        run: |
+          echo "=== Initial Disk Usage ==="
+          df -h
+          echo ""
+          echo "=== Docker Disk Usage ==="
+          docker system df || true
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -41,8 +49,24 @@ jobs:
           set -euxo pipefail
           python -m playwright install --with-deps
 
+      - name: Check disk space after Playwright install
+        run: |
+          echo "=== Disk Usage After Playwright ==="
+          df -h
+          echo ""
+          echo "=== Docker Disk Usage ==="
+          docker system df || true
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: Check disk space before Docker build
+        run: |
+          echo "=== Disk Usage Before Docker Build ==="
+          df -h
+          echo ""
+          echo "=== Docker Disk Usage ==="
+          docker system df || true
 
       - name: Build and load Docker image
         uses: docker/build-push-action@v5
@@ -52,6 +76,17 @@ jobs:
           tags: niicloudoperation/notebook
           load: true
           no-cache: true
+
+      - name: Check disk space after Docker build
+        run: |
+          echo "=== Disk Usage After Docker Build ==="
+          df -h
+          echo ""
+          echo "=== Docker Disk Usage ==="
+          docker system df || true
+          echo ""
+          echo "=== Docker Images ==="
+          docker images
 
       - name: Run Docker container
         run: |
