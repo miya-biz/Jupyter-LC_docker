@@ -72,7 +72,7 @@ jobs:
         run: |
           docker run -d --name jupyter_e2e_container -p 8888:8888 \
             niicloudoperation/notebook start-notebook.sh \
-            --NotebookApp.token="" --NotebookApp.password=""
+            --NotebookApp.token="test-token" --NotebookApp.password=""
 
       - name: Verify Docker container is running
         run: docker ps -a
