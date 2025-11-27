@@ -61,6 +61,15 @@ def main() -> int:
         parameters = {"default_result_path": str(notebook_artifact_dir)}
         if transition_timeout is not None:
             parameters["transition_timeout"] = transition_timeout
+            
+        jupyter_url = os.getenv("JUPYTER_URL")
+        if jupyter_url:
+            parameters["jupyter_url"] = jupyter_url
+        
+        jupyter_token = os.getenv("JUPYTER_TOKEN")
+        if jupyter_token:
+            parameters["jupyter_token"] = jupyter_token
+        
         try:
             pm.execute_notebook(
                 str(notebook),

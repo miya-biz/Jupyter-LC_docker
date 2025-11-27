@@ -89,6 +89,8 @@ jobs:
       - name: Run notebook E2E tests
         env:
           E2E_TRANSITION_TIMEOUT: '30000'
+          JUPYTER_URL: 'http://localhost:8888/tree'
+          JUPYTER_TOKEN: 'test-token'
         run: |
           set -euxo pipefail
           python ui-tests/e2e-notebook/run_notebooks.py
