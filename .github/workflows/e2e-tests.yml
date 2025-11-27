@@ -64,28 +64,31 @@ jobs:
         with:
           context: .
           push: false
-          tags: niicloudoperation/notebook
+          tags: niicloudoperation/notebook:test
           load: true
           no-cache: true
 
       - name: Run Docker container
         run: |
           docker run -d --name jupyter_e2e_container -p 8888:8888 \
-            niicloudoperation/notebook start-notebook.sh \
-            --NotebookApp.token="test-token" --NotebookApp.password=""
+            niicloudoperation/notebook:test start-notebook.sh \
+            --ServerApp.token='test-token' --ServerApp.allow_origin='*'
 
       - name: Verify Docker container is running
         run: docker ps -a
 
-      - name: Wait for services
+      - name: Health check Jupyter server
         run: |
           set -euxo pipefail
-          ui-tests/e2e-notebook/scripts/wait-for-services.sh
+          sleep 20
+          curl --retry 10 --retry-delay 3 --retry-connrefused --fail http://localhost:8888/tree?token=test-token || {
+            docker logs jupyter_e2e_container
+            exit 1
+          }
 
       - name: Run notebook E2E tests
         env:
           E2E_TRANSITION_TIMEOUT: '30000'
-          JUPYTER_URL: 'http://localhost:8888'
         run: |
           set -euxo pipefail
           python ui-tests/e2e-notebook/run_notebooks.py
