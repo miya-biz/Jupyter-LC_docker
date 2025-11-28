@@ -162,6 +162,90 @@ async def run_cell(
         await expect(prompt).not_to_contain_text('[*]', timeout=timeout)
 
 
+async def run(
+    page: Page,
+    timeout: int = 30000
+):
+    """Execute all cells in the notebook.
+
+    Similar to Galata's page.notebook.run functionality.
+    Uses menu click to trigger "Run All Cells" command.
+
+    Args:
+        page: Playwright page object
+        timeout: Timeout in milliseconds
+    """
+    # Click the "Run" menu in the menu bar
+    run_menu = page.locator('.lm-MenuBar-itemLabel').filter(has_text=re.compile(r'^Run$'))
+    await expect(run_menu).to_be_visible(timeout=timeout)
+    await run_menu.click()
+
+    # Click "Run All Cells" in the dropdown menu
+    dropdown_menu = page.locator('.lm-Menu.lm-MenuBar-menu')
+    await expect(dropdown_menu).to_be_visible(timeout=timeout)
+    run_all_item = dropdown_menu.locator('.lm-Menu-item[data-command="runmenu:run-all"]')
+    await expect(run_all_item).to_be_visible(timeout=timeout)
+    await run_all_item.click()
+
+    # Wait for all cells to finish executing
+    # Wait until there are no cells with [*] in their prompts
+    cells = page.locator('.jp-Cell')
+    cell_count = await cells.count()
+
+    for i in range(cell_count):
+        cell = cells.nth(i)
+        # Check if it's a code cell
+        class_name = await cell.get_attribute('class')
+        if 'jp-CodeCell' in class_name:
+            prompt = cell.locator('.jp-InputArea-prompt')
+            # Wait until the prompt doesn't contain [*]
+            await expect(prompt).not_to_contain_text('[*]', timeout=timeout)
+
+
+async def add_cell(
+    page: Page,
+    cell_type: str,
+    content: str,
+    timeout: int = 30000
+) -> int:
+    """Add a new cell at the end of the notebook.
+
+    Similar to Galata's page.notebook.addCell functionality.
+    Selects the last cell and clicks the insert button in the toolbar.
+
+    Args:
+        page: Playwright page object
+        cell_type: Cell type ("code" or "markdown")
+        content: Cell content
+        timeout: Timeout in milliseconds
+
+    Returns:
+        The index of the newly added cell
+    """
+    # Get all cells and select the last one
+    cells = page.locator('.jp-Cell')
+    cell_count = await cells.count()
+
+    if cell_count > 0:
+        # Select the last cell
+        await select_cell(page, cell_count - 1, timeout)
+
+    # Click the insert button in the toolbar
+    insert_button = page.locator('.jp-Toolbar-item[data-jp-item-name="insert"]')
+    await expect(insert_button).to_be_visible(timeout=timeout)
+    await insert_button.click()
+
+    # Wait for the new cell to be added
+    new_cell_count = cell_count + 1
+    await expect(cells).to_have_count(new_cell_count, timeout=timeout)
+
+    # Set the cell type and content
+    new_cell_index = new_cell_count - 1
+    await set_cell(page, new_cell_index, cell_type, content, timeout)
+
+    return new_cell_index
+
+
 async def get_cell(
     page: Page,
     index: int,
@@ -208,6 +292,8 @@ __all__ = [
     "set_cell_type",
     "set_cell",
     "run_cell",
+    "run",
+    "add_cell",
     "get_cell",
     "select_cell",
 ]
