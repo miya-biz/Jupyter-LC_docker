@@ -62,9 +62,13 @@ def main() -> int:
         if transition_timeout is not None:
             parameters["transition_timeout"] = transition_timeout
             
-        jupyter_url = os.getenv("JUPYTER_URL")
-        if jupyter_url:
-            parameters["jupyter_url"] = jupyter_url
+        notebook7_url = os.getenv("NOTEBOOK7_URL")
+        if notebook7_url:
+            parameters["notebook7_url"] = notebook7_url
+
+        jupyter_api_url = os.getenv("JUPYTER_API_URL")
+        if jupyter_api_url:
+            parameters["jupyter_api_url"] = jupyter_api_url
         
         jupyter_token = os.getenv("JUPYTER_TOKEN")
         if jupyter_token:

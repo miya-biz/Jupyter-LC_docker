@@ -86,7 +86,8 @@ jobs:
       - name: Run notebook E2E tests
         env:
           E2E_TRANSITION_TIMEOUT: '30000'
-          JUPYTER_URL: 'http://localhost:8888/tree'
+          NOTEBOOK7_URL: 'http://localhost:8888/tree'
+          JUPYTER_API_URL: 'http://localhost:8888/api'
           JUPYTER_TOKEN: 'test-token'
         run: |
           set -euxo pipefail
