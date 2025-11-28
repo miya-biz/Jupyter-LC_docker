@@ -74,9 +74,6 @@ jobs:
             niicloudoperation/notebook:test start-notebook.sh \
             --ServerApp.token='test-token' --ServerApp.allow_origin='*'
 
-      - name: Verify Docker container is running
-        run: docker ps -a
-
       - name: Health check Jupyter server
         run: |
           set -euxo pipefail
