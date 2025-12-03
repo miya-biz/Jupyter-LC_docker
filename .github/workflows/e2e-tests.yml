@@ -46,16 +46,14 @@ jobs:
           set -euxo pipefail
           docker build -t niicloudoperation/notebook:test .
 
-      - name: Run Docker container
+      - name: Start Docker container
         run: |
+          set -euxo pipefail
           docker run -d --name jupyter_e2e_container -p 8888:8888 \
             niicloudoperation/notebook:test start-notebook.sh \
             --ServerApp.token='test-token' --ServerApp.allow_origin='*'
-
-      - name: Health check Jupyter server
-        run: |
-          set -euxo pipefail
           sleep 20
+          # Health check
           curl --retry 10 --retry-delay 3 --retry-connrefused --fail http://localhost:8888/tree?token=test-token || {
             docker logs jupyter_e2e_container
             exit 1
@@ -86,10 +84,9 @@ jobs:
           path: |
             ui-tests/e2e-notebook/artifacts
 
-      - name: Stop Docker container
+      - name: Shutdown container
         if: always()
-        run: docker stop jupyter_e2e_container
-
-      - name: Remove Docker container
-        if: always()
-        run: docker rm jupyter_e2e_container
+        run: |
+          set -euxo pipefail
+          docker stop jupyter_e2e_container || true
+          docker rm jupyter_e2e_container || true
