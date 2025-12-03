@@ -2,7 +2,7 @@
 
 Copied from https://github.com/RCOSDP/RDM-e2e-test-nb (scripts/playwright.py)
 commit dda7a5de4336c3c3a79537f1537de7d65a0034e6 with minimal path adjustments
-for ep_weave.
+for lc_docker.
 """
 
 from datetime import datetime
