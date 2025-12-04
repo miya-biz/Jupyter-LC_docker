@@ -71,7 +71,6 @@ async def set_cell_type(
     # Check current cell type
     class_name = await cell.get_attribute('class')
     current_cell_type = "code" if 'jp-CodeCell' in class_name else "markdown"
-    print(f"current tab {current_cell_type}")
 
     # Not change if cell type is same
     if current_cell_type == cell_type:
